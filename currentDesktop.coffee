@@ -18,7 +18,7 @@ style: """
     width: 100%
     position: absolute
     margin: 0 auto
-    margin-top: 6px
+    margin-top: 5px
     font: 14px FontAwesome
     //color: #a5a5a5
     font-weight: 700
@@ -32,10 +32,12 @@ style: """
 
     .inactive {
         border: 1px #a89984
+        color: #ABB2BF
     }
 
     .active {
-        background: #ABB2BF
+        background: #d19a66
+        border-radius: 2px
         color: #1E2127
     }
 """
@@ -47,10 +49,9 @@ update: (output, domEl) ->
 
     #display the html string
     $(domEl).find('.kwmmode').html("<span class='tilingMode icon'> </span>" +
-        "<span class='tilingMode white'>#{mode} " +
-        "<span> |</span>" +
+        "<span class='white'>" + mode + "</span><span> ⎢</span>" +
         spaces +
-        "<span>| </span><span class='icon'></span> " +
+        "<span>⎢ </span><span class='icon'></span> " +
         "<span class='white'>#{focused}</span>")
 
 maxLength: (str, limit) ->

@@ -1,4 +1,4 @@
-command: "sh ./scripts/status.sh"
+command: './scripts/status.py'
 
 refreshFrequency: 10000 # ms
 
@@ -20,7 +20,7 @@ style: """
     font: 12px FontAwesome
     position: relative
     top: 0px
-    right: -11px
+    right: -12px
     z-index: 1
   """
 timeAndDate: (date, time) ->
@@ -64,27 +64,72 @@ getWifiStatus: (status, netName, netIP) ->
     return "<span class='grey wifi'>&nbsp&nbsp&nbsp</span><span class='white'>--&nbsp&nbsp&nbsp</span>"
 
 getVolume: (str) ->
-  if str == "muted"
+  if str == "0"
     return "<span class='volume'>&nbsp;&nbsp;</span>"
   else
     return "<span class='volume'>&nbsp;&nbsp;</span><span class='white'>#{str}&nbsp</span>"
+
+getCurrentTime: () ->
+  today = new Date
+  hours = today.getHours()
+  minutes = today.getMinutes()
+  if minutes < 10
+    minutes = '0' + minutes
+  if hours < 10
+    hours = '0' + hours
+  time = hours + ':' + minutes
+  return time
+
+getCurrentDate: () ->
+  today = new Date
+  daylist = [
+    'Sun'
+    'Mon'
+    'Tue'
+    'Wed'
+    'Thu'
+    'Fri'
+    'Sat'
+  ]
+  month_list = [
+    'Jan'
+    'Feb'
+    'Mar'
+    'Apr'
+    'May'
+    'Jun'
+    'Jul'
+    'Aug'
+    'Sep'
+    'Oct'
+    'Nov'
+    'Dec'
+  ]
+  day = daylist[today.getDay()]
+  date = today.getDate()
+  month = month_list[today.getMonth()]
+  year = today.getYear() + 1900
+  output=day + ', ' + month + ' ' + date + ' ' + year
+  return output
+
+
 
 update: (output, domEl) ->
 
   # split the output of the script
   values = output.split('@')
 
-  time = values[0].replace /^\s+|\s+$/g, ""
-  date = values[1]
-  battery = values[2]
-  isCharging = values[3]
-  netStatus = values[4].replace /^\s+|\s+$/g, ""
-  netName = values[5]
-  netIP = values[6]
-  volume = values[7]
+  time = @getCurrentTime()
+  date = @getCurrentDate()
+  battery = values[0]
+  isCharging = values[1]
+  netStatus = values[2].replace /^\s+|\s+$/g, ""
+  netName = values[3]
+  netIP = values[4]
+  volume = values[5]
 
   # create an HTML string to be displayed by the widget
-  htmlString = @getVolume(volume) + "<span>" + " | " + "</span>" +
+  htmlString = @getVolume(volume) + "<span>" + " ⎢" + "</span>" +
                @getWifiStatus(netStatus, netName, netIP) + "<span>" + " ⎢ " + "</span>" +
                @batteryStatus(battery, isCharging) + "<span>" + " ⎢ " + "</span>" +
                @timeAndDate(date,time)
